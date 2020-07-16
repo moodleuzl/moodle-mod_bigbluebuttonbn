@@ -3486,3 +3486,30 @@ function bigbluebuttonbn_create_meeting_metadata(&$bbbsession) {
     }
     return $metadata;
 }
+
+function bigbluebutton_set_sessioncoocies($bigbluebuttonbn) {
+    global $DB;
+    $meeting = $bigbluebuttonbn->meetingid;
+    $instid = $bigbluebuttonbn->id;
+    $moodlebbbsession = $bigbluebuttonbn->session;
+    if(!isset($moodlebbbsession)) {
+        $record = $DB->get_record('bigbluebuttonbn', array('id' => $instid));
+        $record->session = getRandomString(128);
+        $DB->update_record('bigbluebuttonbn', $record);
+        $moodlebbbsession = $record->session;
+    }
+    //TODO: fix url to BBB Server
+    setcookie('meetingid', $meeting, time() + (86400 * 3), $path='/',  $host="localhost");                   // 86400 = 1 day
+    setcookie('instid', $instid, time() + (86400 * 3), $path='/',  $host="localhost");                       // 86400 = 1 day
+    setcookie('moodlebbbsession', $moodlebbbsession, time() + (86400 * 3), $path='/',  $host="localhost");   // 86400 = 1 day
+}
+
+function getRandomString($n) {
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $randomString = '';
+    for ($i = 0; $i < $n; $i++) {
+        $index = rand(0, strlen($characters) - 1);
+        $randomString .= $characters[$index];
+    }
+    return $randomString;
+}

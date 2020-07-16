@@ -84,6 +84,8 @@ $PAGE->set_title($bigbluebuttonbn->name);
 $PAGE->set_cacheable(false);
 $PAGE->set_heading($course->fullname);
 
+bigbluebutton_set_sessioncoocies($bigbluebuttonbn);
+
 /** @var core_renderer $OUTPUT */
 $OUTPUT;
 
