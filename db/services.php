@@ -45,4 +45,10 @@ $functions = array(
         'capabilities'  => 'mod/bigbluebuttonbn:view',
         'services'      => array(MOODLE_OFFICIAL_MOBILE_SERVICE),
     ),
+    'mod_bigbluebutton_check_session' => array(
+        'classname'   => 'mod_bigbluebuttonbn_external',
+        'methodname'  => 'check_session',
+        'description' => 'validates a custom BBB session for access control',
+        'type'        => 'read',
+    ),
 );

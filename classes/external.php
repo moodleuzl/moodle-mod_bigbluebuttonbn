@@ -202,4 +202,99 @@ class mod_bigbluebuttonbn_external extends external_api {
             )
         );
     }
+
+
+
+
+    /**
+     * Returns description of method parameters
+     * @return external_function_parameters
+     */
+    public static function check_session_parameters() {
+        return new external_function_parameters(
+            array()
+        );
+    }
+
+
+
+    /**
+     * Returns welcome message
+     * @return string welcome message
+     */
+    public static function check_session($welcomemessage = 'Hello world, ') {
+        global $USER;
+        global $DB;
+
+        $cookie_id = 'instid';
+        $cookie_session = 'moodlebbbsession';
+        $cookie_meetingid = 'meetingid';
+
+        //Parameter validation
+        //REQUIRED
+        $params = self::validate_parameters(self::check_session_parameters(),
+            array());//'welcomemessage' => $welcomemessage
+
+        //Context validation
+        //OPTIONAL but in most web service it should present
+        $context = get_context_instance(CONTEXT_USER, $USER->id);
+        self::validate_context($context);
+
+        //Capability checking
+        //OPTIONAL but in most web service it should present
+//        if (!has_capability('moodle/user:viewdetails', $context)) {
+//            throw new moodle_exception('cannotviewprofile');
+//        }
+
+        $id = $_COOKIE[$cookie_id];
+        $session = $_COOKIE[$cookie_session];
+        $mid = $_COOKIE[$cookie_meetingid];
+//        echo $id;
+//        echo $session;
+//        echo $mid;
+
+        if(isset($id) and isset($session) and isset($mid)) {
+//            echo 'aaa';
+            if ($DB->record_exists('bigbluebuttonbn', array('id' => $id))) {
+
+                $record = $DB->get_record('bigbluebuttonbn', array('id' => $id));
+//                echo $record;
+                if ($record->session == $session and $record->meetingid == $mid) {
+                    http_response_code(200);
+                    exit(1);
+                } elseif ($record->check_session == 'no') {
+                    http_response_code(200);
+                    exit(1);
+                } else {
+                    http_response_code (403);
+                    exit(1);
+                }
+            }
+        } else {
+            http_response_code (403);
+            exit(1);
+        }
+
+//        if ($params['meetingid'] === 'x') {
+//            http_response_code (403);
+//            exit(1);
+//        }
+//        return $params['welcomemessage'] . $USER->firstname ;;
+        return ;
+    }
+
+    private static function get_Session($id) {
+
+    }
+
+    /**
+     * Returns description of method result value
+     * @return external_description
+     */
+    public static function check_session_returns() {
+        return new external_value(PARAM_TEXT, 'The welcome message + user first name');
+    }
+
+
+
 }
