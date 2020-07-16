@@ -279,6 +279,12 @@ class mod_bigbluebuttonbn_mod_form extends moodleform_mod {
             $this->bigbluebuttonbn_mform_add_element($mform, $field['type'], $field['name'], $field['data_type'],
                 $field['description_key'], 0);
         }
+
+        $mform->addElement('select', 'check_session',
+            'Aufnahmen schützen', array(
+                'yes' => 'Zugang nur für Nutzer de Kurses',
+                'no' => 'Zugang für alle'
+            ));
     }
 
     /**
