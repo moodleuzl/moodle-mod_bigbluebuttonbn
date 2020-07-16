@@ -48,6 +48,29 @@ For information on how to setup your own BigBlueButton server see
 
 http://bigbluebutton.org/
 
+Configuring Nginx for access control
+==================================
+
+```
+location /auth {
+                internal;
+                proxy_pass              http://localhost:8000/webservice/rest/server.php/mod_bigbluebutton_check_session?wstoken=7af369de7d0d6238e05f05ae3060ff99&wsfunction=mod_bigbluebutton_check_session ;
+                proxy_pass_request_body off;
+                proxy_set_header        Content-Length "";
+                proxy_set_header        X-Original-URI $request_uri;
+        }
+
+```
+
+And inside the `location` block, that should be protected:
+
+```
+auth_request     /auth;
+auth_request_set $auth_status $upstream_status;
+```
+
+analog to this tutorial on nginx.com: https://docs.nginx.com/nginx/admin-guide/security-controls/configuring-subrequest-authentication/
+
 Obtaining the source
 ====================
 This GitHub repository at
